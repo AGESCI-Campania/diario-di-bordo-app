@@ -1,0 +1,38 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dev (localhost)",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=API_BASE_URL=http://localhost:8000"
+      ]
+    },
+    {
+      "name": "Dev (staging)",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=API_BASE_URL=https://staging.plancia.agescicampania.org"
+      ]
+    },
+    {
+      "name": "Produzione",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        "--dart-define=API_BASE_URL=https://plancia.agescicampania.org"
+      ]
+    },
+    {
+      "name": "Dev (localhost) — profile mode",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "args": [
+        "--dart-define=API_BASE_URL=http://localhost:8000"
+      ]
+    }
+  ]
+}

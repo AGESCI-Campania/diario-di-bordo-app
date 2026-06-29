@@ -1,0 +1,43 @@
+{
+  "editor.formatOnSave": true,
+  "editor.rulers": [100],
+  "editor.tabSize": 2,
+  "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
+    "editor.formatOnSave": true,
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "dart.flutterSdkPath": null,
+  "dart.lineLength": 100,
+  "dart.showTodos": true,
+  "dart.openDevTools": "never",
+  "dart.debugExternalPackageLibraries": false,
+  "dart.debugSdkLibraries": false,
+  "files.exclude": {
+    "**/.dart_tool": true,
+    "**/.flutter-plugins": true,
+    "**/.flutter-plugins-dependencies": true
+  },
+  "cSpell.language": "it,en",
+  "cSpell.words": [
+    "appgv",
+    "antaresnet",
+    "Plancia",
+    "AGESCI",
+    "allauth",
+    "riverpod",
+    "diario",
+    "diari",
+    "squadriglia",
+    "reparto",
+    "valutazione",
+    "edizione",
+    "csq",
+    "crp",
+    "pgv"
+  ]
+}
