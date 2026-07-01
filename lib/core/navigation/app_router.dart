@@ -58,7 +58,14 @@ String? _redirect(Ref ref, String location) {
     return gateRoutes.contains(location) ? null : '/gate';
   }
 
-  const authOnlyRoutes = {'/login', '/mfa', '/gate', '/pin', '/pin-setup'};
+  const authOnlyRoutes = {
+    splashLocation,
+    '/login',
+    '/mfa',
+    '/gate',
+    '/pin',
+    '/pin-setup',
+  };
   return authOnlyRoutes.contains(location) ? '/home' : null;
 }
 

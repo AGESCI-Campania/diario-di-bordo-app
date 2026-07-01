@@ -94,7 +94,8 @@
 - [x] `LoginPage`/`MfaPage` non navigano più esplicitamente: la redirect osserva `AuthNotifier` e sposta la UI da sola (MFA richiesto, login riuscito, ecc.)
 - [x] `BiometricGatePage` naviga a `/pin` per il fallback (biometria assente/non disponibile/annullata o tasto "Usa il PIN") invece di incorporare `PinPage` con stato locale
 - [x] `FirstAccessPage` (ex `_FirstAccessFlow` in `main.dart`): PIN setup poi scelta biometria, isolato in `lib/features/auth/first_access_page.dart`
-- Nota: `flutter analyze` e `flutter test` verdi; verifica manuale su simulatore/emulatore non eseguita in questo step — toolchain locale non disponibile (iOS: runtime 26.5 mancante su Xcode; Android: system image AVD assente per entrambi gli emulatori configurati). Da rifare alla prima occasione utile o quando la toolchain sarà a posto.
+- Nota: verificato su simulatore iOS (runtime 26.5) — `authGuard` conferma la `LoginPage` senza sessione salvata. Le altre transizioni (`biometricGuard`, primo accesso, home, rotte segnaposto) sono state esercitate con test widget temporanei che sovrascrivono `authNotifierProvider`/`gateNotifierProvider`/`pinConfiguredProvider` (non committati, solo per la verifica di questo step — i test veri sono Step 14). Questa verifica ha scoperto un bug: con sessione già valida/sbloccata/PIN configurato, la redirect non spostava mai l'utente da `/` (splash) a `/home`, perché la rotta splash non era inclusa nel set di rotte "solo-auth" — corretto in `app_router.dart` aggiungendo `splashLocation` a quel set.
+- Nota: `flutter analyze` e `flutter test` verdi.
 
 ---
 
