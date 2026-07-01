@@ -12,7 +12,7 @@ solo gli interventi che si applicano al repo `plancia`.
 
 ## Aperti
 
-- [ ] **Badge stato `maggiori_info` grigio invece di giallo/arancio**
+- [x] **Badge stato `maggiori_info` grigio invece di giallo/arancio**
   - **Dove**: `templates/diaries/list.html` e `templates/diaries/detail.html`,
     blocco `{% if diario.stato == ... %}` per il badge Bootstrap.
   - **Problema**: lo stato `maggiori_info` non ha un `elif` dedicato e ricade
@@ -32,4 +32,4 @@ solo gli interventi che si applicano al repo `plancia`.
 
 ## Portati
 
-_(nessuno finora)_
+- Badge `maggiori_info` → `bg-warning text-dark` in `list.html` e `detail.html` (allineato all'app Flutter)
