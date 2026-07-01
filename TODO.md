@@ -12,28 +12,28 @@
 
 ---
 
-## Step 2 — Dipendenze (`pubspec.yaml`)
+## Step 2 — Dipendenze (`pubspec.yaml`) ✅
 
-- [ ] `dio` — client HTTP con interceptors
-- [ ] `hooks_riverpod` + `riverpod_annotation` — state management
-- [ ] `go_router` — navigazione con route guards
-- [ ] `flutter_secure_storage` — Keychain/Keystore per X-Session-Token e PIN
-- [ ] `local_auth` — FaceID, TouchID, Fingerprint
-- [ ] `reactive_forms` — form moduli 1–5 con validazione
-- [ ] `flutter_svg` — icone SVG AGESCI
-- [ ] `flutter_native_splash` — splash screen
-- [ ] `intl` — localizzazione italiana
-- [ ] `build_runner` + `riverpod_generator` (dev) — code generation Riverpod
+- [x] `dio` — client HTTP con interceptors
+- [x] `hooks_riverpod` + `riverpod_annotation` — state management (pinned 3.2.1 / 4.0.2 per conflitto analyzer/meta con riverpod_generator)
+- [x] `go_router` — navigazione con route guards
+- [x] `flutter_secure_storage` — Keychain/Keystore per X-Session-Token e PIN
+- [x] `local_auth` — FaceID, TouchID, Fingerprint
+- [x] `reactive_forms` — form moduli 1–5 con validazione
+- [x] `flutter_svg` — icone SVG AGESCI
+- [x] `flutter_native_splash` — splash screen
+- [x] `intl` — localizzazione italiana
+- [x] `build_runner` + `riverpod_generator` (dev) — code generation Riverpod
 
 ---
 
-## Step 3 — Design system e tema
+## Step 3 — Design system e tema ✅
 
-- [ ] `lib/core/theme/plancia_colors.dart`: palette AGESCI (verde #5AA02C, viola #7A1E99, giallo #FFCC1E)
-- [ ] `lib/core/theme/plancia_theme.dart`: `ThemeData` con `ColorScheme.fromSeed(verdePrimario)` Material 3
-- [ ] Chip colori stati FSM (mappati 1:1 con la web app)
-- [ ] Configurare `flutter_native_splash` (sfondo bianco + logo `assets/icons/icon-512x512.png`)
-- [ ] Aggiornare `pubspec.yaml` con sezione `assets:`
+- [x] `lib/core/theme/plancia_colors.dart`: palette AGESCI (verde #5AA02C, viola #7A1E99, giallo #FFCC1E)
+- [x] `lib/core/theme/plancia_theme.dart`: `ThemeData` con `ColorScheme.fromSeed(verdePrimario)` Material 3
+- [x] Chip colori stati FSM (mappati 1:1 con la web app) — `lib/shared/widgets/stato_badge.dart`
+- [x] Configurare `flutter_native_splash` (sfondo bianco + logo `assets/icons/icon-512x512.png`)
+- [x] Aggiornare `pubspec.yaml` con sezione `assets:`
 
 ---
 
