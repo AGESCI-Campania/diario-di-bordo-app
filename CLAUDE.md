@@ -39,7 +39,7 @@ lib/
   core/
     api/          # Dio client, interceptors, api per ogni dominio
     auth/         # AuthService: login, logout, token storage
-    models/       # Modelli JSON (Diario, Moduli, Edizione, Org, Utente)
+    models/       # Modelli JSON (Diario, Moduli, Edizione, Org, Utente, AppStatus)
     theme/        # PlanciaTheme, PlanciaColors
   features/
     auth/         # LoginPage, MfaPage, BiometricGatePage, PinPage, PinSetupPage
@@ -104,7 +104,19 @@ ma l'UI non deve nemmeno tentare di mostrarli).
 | `409` Conflict (optimistic lock) | Dialog "Modulo aggiornato da un altro dispositivo — ricarica?" |
 | `422` Stato non valido | Snackbar con il messaggio dell'API |
 | `503` Manutenzione | Pagina dedicata (non dialog) |
+| `426` Upgrade Required (Plancia ≥ 2.3.0) | Pagina di blocco "Aggiorna l'app" con `messaggio`/`versione_minima` — nessun accesso finché non aggiornata |
+| `429` Too Many Requests (Plancia ≥ 2.3.0) | Snackbar con `retry_after` secondi, nessun retry automatico |
 | Nessuna rete | Banner offline + timestamp ultimo dato in cache (cache in memoria) |
+
+### Version gate (Plancia ≥ 2.3.0)
+
+Ogni richiesta a `/api/v1/*` include l'header `X-App-Version` (costante `appVersion`
+in `lib/core/api/api_client.dart`, allineata a `version:` in `pubspec.yaml`). Il
+backend può rispondere `426` (sotto `app_versione_minima`, blocco hard) o aggiungere
+l'header `X-App-Upgrade-Warning: true` (sotto `app_versione_deprecata`, warning
+non bloccante). `GET /api/v1/app-status` (pubblico, no auth) va chiamato al lancio
+dell'app, prima del login, per decidere se mostrare la pagina di blocco o un banner
+di aggiornamento disponibile — vedi Step 6 in TODO.md.
 
 ## Palette colori AGESCI
 

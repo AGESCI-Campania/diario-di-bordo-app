@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 /// Eccezioni per gli errori dell'API Plancia `/api/v1/*`.
 ///
 /// Vedi CLAUDE.md — tabella "Gestione errori API" per l'azione UI attesa
@@ -52,6 +54,29 @@ class MaintenanceException extends ApiException {
   const MaintenanceException([super.message = 'Servizio in manutenzione']);
 }
 
+/// `426` — versione app sotto `app_versione_minima` (Plancia ≥ 2.3.0):
+/// aggiornamento obbligatorio, la UI deve bloccare l'accesso.
+class UpgradeRequiredException extends ApiException {
+  const UpgradeRequiredException(
+    this.versioneMinima, [
+    super.message =
+        "Versione app non supportata. Aggiorna l'app per continuare.",
+  ]);
+
+  final String versioneMinima;
+}
+
+/// `429` — rate limit superato (Plancia ≥ 2.3.0): la UI mostra un messaggio
+/// e può ritentare dopo `retryAfter` secondi.
+class RateLimitException extends ApiException {
+  const RateLimitException(
+    this.retryAfter, [
+    super.message = 'Troppe richieste, riprova più tardi',
+  ]);
+
+  final int retryAfter;
+}
+
 /// Nessuna connessione di rete, timeout, o errore di trasporto.
 class NetworkException extends ApiException {
   const NetworkException([super.message = 'Connessione assente']);
@@ -60,4 +85,16 @@ class NetworkException extends ApiException {
 /// Qualunque altro errore HTTP non previsto dalla tabella di CLAUDE.md.
 class UnknownApiException extends ApiException {
   const UnknownApiException(super.message);
+}
+
+/// Estrae la [ApiException] mappata dall'interceptor di `ApiClient` da un
+/// errore catturato a livello applicativo. L'interceptor rigetta sempre con
+/// `error.copyWith(error: <ApiException>)`, quindi il chiamante riceve una
+/// [DioException] la cui [DioException.error] è già il tipo applicativo.
+ApiException apiExceptionOf(Object error) {
+  if (error is ApiException) return error;
+  if (error is DioException && error.error is ApiException) {
+    return error.error as ApiException;
+  }
+  return UnknownApiException(error.toString());
 }

@@ -47,33 +47,41 @@
 - [x] `evaluations_api.dart`: GET valutazione, assegna PGV, valuta, proposta, conferma, rigetta, modifica, pubblica
 - [x] `editions_api.dart`: lista edizioni, dettaglio
 - [x] `org_api.dart`: albero organizzativo
+- [x] `system_api.dart`: `GET /api/v1/app-status` (Plancia ≥ 2.3.0, pubblico, no auth)
+- [x] `api_client.dart`: interceptor `X-App-Version` su `dio` (non `authDio`) — Plancia ≥ 2.3.0
+- [x] `api_exceptions.dart`: `UpgradeRequiredException` (426), `RateLimitException` (429) — Plancia ≥ 2.3.0
 - Nota: i metodi restituiscono JSON grezzo (`Map`/`List`), la conversione in modelli tipati è nello Step 5
 
 ---
 
-## Step 5 — Modelli (`lib/core/models/`)
+## Step 5 — Modelli (`lib/core/models/`) ✅
 
-- [ ] `utente.dart`: pk, email, nome, cognome, ruolo, ruolo_display
-- [ ] `edizione.dart`: pk, nome, stato, scadenza_1, scadenza_2
-- [ ] `diario.dart`: pk, squadriglia, edizione, tipo, stato, stato_display, pubblicato, version + enum StatoDiario
-- [ ] `moduli.dart`: Anagrafica, Presentazione, Impresa, Missione (con version + data)
-- [ ] `relazione_finale.dart`: sintesi imprese, considerazioni, specialita_conquistata
-- [ ] `valutazione.dart`: esito, stato, note, pubblicata, assegnazioni PGV
-- [ ] `org.dart`: Zona → Gruppo → Reparto → Squadriglia
-- [ ] Tutti con `fromJson`/`toJson` manuali (no code generation)
+- [x] `utente.dart`: pk, email, nome, cognome, ruolo, ruolo_display
+- [x] `edizione.dart`: pk, nome, stato, scadenza_1, scadenza_2 (+ `EdizioneRef` leggero pk/nome per l'annidamento in `Diario`)
+- [x] `diario.dart`: pk, squadriglia, edizione, tipo, stato, stato_display, pubblicato, version + enum StatoDiario (+ `DiarioDetail` per `GET /diari/{pk}` con moduli/relazione/valutazione annidati)
+- [x] `moduli.dart`: Anagrafica, Presentazione, Impresa, Missione (con version + data)
+- [x] `relazione_finale.dart`: sintesi imprese, considerazioni, specialita_conquistata — forma di annidamento in `DiarioDetail` da verificare, vedi `TODO_PLANCIA.md`
+- [x] `valutazione.dart`: esito, stato, note, pubblicata, assegnazioni PGV
+- [x] `org.dart`: Zona → Gruppo → Reparto → Squadriglia
+- [x] `app_status.dart`: upgrade_required, upgrade_available, versione_minima, deprecata_sotto, messaggio, funzioni_limitate — Plancia ≥ 2.3.0
+- [x] Tutti con `fromJson`/`toJson` manuali (no code generation)
 
 ---
 
-## Step 6 — Autenticazione e gate biometrico
+## Step 6 — Autenticazione e gate biometrico ✅
 
-- [ ] `lib/core/auth/auth_service.dart`: login, logout, leggi/salva token, check sessione (`GET /me`)
-- [ ] `lib/features/auth/login_page.dart`: form email/password, gestione errori
-- [ ] `lib/features/auth/mfa_page.dart`: inserimento codice TOTP a 6 cifre
-- [ ] `lib/features/auth/biometric_gate_page.dart`: FaceID/TouchID con fallback a PIN
-- [ ] `lib/features/auth/pin_setup_page.dart`: setup PIN 6 cifre al primo accesso
-- [ ] `lib/features/auth/pin_page.dart`: inserimento PIN con hash SHA-256 + salt
-- [ ] Timeout 5 minuti in background → ripresenta gate (`AppLifecycleListener`)
-- [ ] `BiometricSetupPage`: chiede se abilitare biometria; se rifiutata, PIN obbligatorio
+- [x] Controllo versione app al lancio (Plancia ≥ 2.3.0): `appStatusProvider` chiama `SystemApi.getAppStatus()` prima della LoginPage (in `BootstrapPage`); `upgrade_required` → `UpgradeRequiredPage` di blocco (usa `messaggio`/`versione_minima`); `upgrade_available` → `UpgradeBanner` non bloccante con `funzioni_limitate`. Errore di rete sul check → non blocca, si procede al login (nessuna info di versione disponibile)
+- [x] `lib/core/auth/auth_service.dart`: login, logout, leggi/salva token (`SecureStore`), check sessione (`GET /me`) — orchestrato da `AuthNotifier`/`authNotifierProvider` in `auth_state.dart`
+- [x] `lib/features/auth/login_page.dart`: form email/password, gestione errori (credenziali non valide, rete) — `AuthResult.requiresMfa`/`errors` estesi in `auth_api.dart` per distinguere MFA da credenziali errate
+- [x] `lib/features/auth/mfa_page.dart`: inserimento codice TOTP a 6 cifre
+- [x] `lib/features/auth/biometric_gate_page.dart`: FaceID/TouchID (`local_auth`) con fallback a `pin_page.dart`
+- [x] `lib/features/auth/pin_setup_page.dart`: setup PIN 6 cifre al primo accesso (doppio inserimento)
+- [x] `lib/features/auth/pin_page.dart`: inserimento PIN, verificato via `PinService` (hash SHA-256 + salt in `flutter_secure_storage`)
+- [x] Timeout 5 minuti in background → ripresenta gate: `GateNotifier` (`gate_state.dart`) con `AppLifecycleListener`, osservato reattivamente da `_PostAuthGate` in `main.dart`
+- [x] `lib/features/auth/biometric_setup_page.dart`: chiede se abilitare biometria dopo il PIN; se rifiutata (o biometria non disponibile sul device) resta solo il PIN
+- [x] iOS: `NSFaceIDUsageDescription` in `Info.plist`; Android: `MainActivity` passata a `FlutterFragmentActivity` (richiesta da `local_auth` per il `BiometricPrompt`)
+- Nota: la navigazione tra le pagine è imperativa/reattiva su provider Riverpod (`BootstrapPage` → `_AuthGate` → `_PostAuthGate` in `main.dart`), non ancora tramite `go_router` — verrà sostituita dai route guard dello Step 7
+- Nota: `minSdkVersion` Android per `local_auth`/`BiometricPrompt` da verificare allo Step 13 (build config)
 
 ---
 
@@ -95,7 +103,7 @@
 - [ ] `ImpreseEditPage` (Impresa 1 e 2 — impresa 2 opzionale per rinnovo)
 - [ ] `MissioneEditPage` (opzionale per rinnovo)
 - [ ] `RelazioneFinaleEditPage` (solo CRP, nessun optimistic locking)
-- [ ] Dialog conferma azioni FSM: "Invia la tua parte" (CSQ), "Invia al valutatore" (CRP), "Riapri" (staff)
+- [ ] Dialog conferma azioni FSM: "Invia al Capo Reparto" (CSQ), "Invia alla pattuglia" (CRP), "Riapri" (staff)
 
 ---
 

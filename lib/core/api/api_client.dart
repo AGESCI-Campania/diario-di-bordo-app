@@ -2,6 +2,12 @@ import 'package:dio/dio.dart';
 
 import 'api_exceptions.dart';
 
+/// Versione dell'app inviata come `X-App-Version` su `/api/v1/*` (Plancia
+/// ≥ 2.3.0 la usa per `AppVersionMiddleware` — 426 sotto la minima
+/// configurata, header `X-App-Upgrade-Warning` sotto la deprecata). Tenere
+/// allineata a `version:` in `pubspec.yaml` (vedi CLAUDE.md — Identificativi).
+const String appVersion = '1.0.0';
+
 /// Punto centrale di configurazione HTTP verso il backend Plancia.
 ///
 /// Espone due client perché le due famiglie di endpoint usano forme di
@@ -44,6 +50,10 @@ class ApiClient {
 
     dio.interceptors.add(
       InterceptorsWrapper(
+        onRequest: (options, handler) {
+          options.headers['X-App-Version'] = appVersion;
+          handler.next(options);
+        },
         onError: (error, handler) => handler.reject(
           error.copyWith(error: _mapApiError(error, onUnauthorized)),
         ),
@@ -104,6 +114,23 @@ ApiException _mapApiError(DioException error, void Function()? onUnauthorized) {
       );
     case 503:
       return MaintenanceException(detail ?? 'Servizio in manutenzione');
+    case 426:
+      final versioneMinima = data is Map
+          ? data['versione_minima'] as String? ?? ''
+          : '';
+      return UpgradeRequiredException(
+        versioneMinima,
+        detail ?? "Versione app non supportata. Aggiorna l'app per continuare.",
+      );
+    case 429:
+      final retryAfter =
+          (data is Map ? data['retry_after'] as int? : null) ??
+          int.tryParse(response.headers.value('retry-after') ?? '') ??
+          0;
+      return RateLimitException(
+        retryAfter,
+        detail ?? 'Troppe richieste, riprova più tardi',
+      );
     default:
       return UnknownApiException(
         detail ?? 'Errore imprevisto (${response.statusCode})',

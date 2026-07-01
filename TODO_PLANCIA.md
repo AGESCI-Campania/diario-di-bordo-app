@@ -14,6 +14,24 @@ solo gli interventi che si applicano al repo
 
 ## Aperti
 
+- [ ] **Forma di `relazione_finale` non documentata dentro `GET /diari/{pk}`**
+  - **Dove**: `docs/api/endpoints.md`, sezione `GET /diari/{pk}` vs
+    `PUT /diari/{pk}/relazione-finale`.
+  - **Problema**: il PUT ha request/response `{"data": {...}}` (nessun
+    `version`, a differenza dei moduli 1–5). L'esempio di `GET /diari/{pk}`
+    mostra solo `"relazione_finale": null` e non chiarisce se, quando
+    valorizzato, il campo sia annidato come `{"data": {...}}` oppure come
+    oggetto piatto `{sintesi_impresa1: ..., ...}`.
+  - **Assunzione fatta nell'app Flutter**: `lib/core/models/relazione_finale.dart`
+    (`RelazioneFinale.fromJson`) si aspetta l'oggetto piatto, coerente con
+    l'assenza di `version`. Da verificare contro una risposta reale
+    dell'API prima dello Step 8 (schermate); se il backend annida in
+    `{"data": {...}}` va aggiunto un livello di unwrap in `DiarioDetail.fromJson`
+    (`lib/core/models/diario.dart`).
+  - **Fix proposto**: aggiungere un esempio esplicito in
+    `docs/api/endpoints.md` per `relazione_finale` valorizzato dentro
+    `GET /diari/{pk}`.
+
 - [x] **Badge stato `maggiori_info` grigio invece di giallo/arancio**
   - **Dove**: `templates/diaries/list.html` e `templates/diaries/detail.html`,
     blocco `{% if diario.stato == ... %}` per il badge Bootstrap.
