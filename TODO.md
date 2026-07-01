@@ -37,16 +37,17 @@
 
 ---
 
-## Step 4 — Layer API (`lib/core/api/`)
+## Step 4 — Layer API (`lib/core/api/`) ✅
 
-- [ ] `api_client.dart`: Dio con base URL da `--dart-define=API_BASE_URL`, interceptor X-Session-Token
-- [ ] Interceptor errori: 401 → logout forzato; 503 → navigazione a pagina manutenzione
-- [ ] `auth_api.dart`: login (`/_allauth/app/v1/auth/login`), MFA, logout
-- [ ] `me_api.dart`: `GET /api/v1/me`
-- [ ] `diari_api.dart`: lista, dettaglio, PUT moduli 1–5, PUT relazione finale, POST azioni FSM
-- [ ] `evaluations_api.dart`: GET/POST valutazione, assegna PGV, proposta, conferma, rigetto, pubblica
-- [ ] `editions_api.dart`: lista edizioni, dettaglio
-- [ ] `org_api.dart`: albero organizzativo
+- [x] `api_client.dart`: due Dio (`dio` per `/api/v1`, `authDio` per `/_allauth/app/v1`), interceptor X-Session-Token
+- [x] Interceptor errori: `api_exceptions.dart` mappa 400/401/403/404/409/422/503/rete; 401 → callback `onUnauthorized` per il logout forzato (gestito da `AuthService` allo Step 6)
+- [x] `auth_api.dart`: login, `authenticateMfa`, `logout` (`/_allauth/app/v1/auth/*`) — parsing envelope allauth headless
+- [x] `me_api.dart`: `GET /api/v1/me`
+- [x] `diari_api.dart`: lista, dettaglio, PUT moduli 1–5 (con `version`), PUT relazione finale (senza `version`), POST azioni FSM
+- [x] `evaluations_api.dart`: GET valutazione, assegna PGV, valuta, proposta, conferma, rigetta, modifica, pubblica
+- [x] `editions_api.dart`: lista edizioni, dettaglio
+- [x] `org_api.dart`: albero organizzativo
+- Nota: i metodi restituiscono JSON grezzo (`Map`/`List`), la conversione in modelli tipati è nello Step 5
 
 ---
 
