@@ -1,17 +1,41 @@
-# appgv
+# Diari di Bordo
 
-A new Flutter project.
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B.svg?logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Dart](https://img.shields.io/badge/Dart-3.11%2B-0175C2.svg?logo=dart&logoColor=white)](https://dart.dev/)
+[![Riverpod](https://img.shields.io/badge/state-Riverpod-1B1B1F.svg)](https://riverpod.dev/)
+[![go_router](https://img.shields.io/badge/routing-go__router-4285F4.svg)](https://pub.dev/packages/go_router)
+![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Getting Started
+App mobile Flutter per la gestione dei **Guidoncini Verdi** — AGESCI Campania, Branca E/G.
+Consente a Capi Squadriglia, Capi Reparto, Pattuglia GV, Incaricati EG e Segreteria di
+consultare e compilare i Diari di Bordo tramite le API REST della piattaforma **Plancia**.
 
-This project is a starting point for a Flutter application.
+> Guida per l'implementazione assistita: [`CLAUDE.md`](CLAUDE.md).
+> Avanzamento sviluppo: [`TODO.md`](TODO.md).
 
-A few resources to get you started if this is your first Flutter project:
+## Stack
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Flutter 3.x · Dart 3.x · Riverpod (`hooks_riverpod`) · go_router · Dio · flutter_secure_storage ·
+local_auth (FaceID/TouchID/Fingerprint) · reactive_forms · intl.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Identificativi
+
+|            |                        |
+| ---------- | ---------------------- |
+| Bundle ID  | `org.antaresnet.appgv` |
+| API target | Plancia `/api/v1/`     |
+| Backend    | `plancia` (Django)     |
+
+## Avvio rapido
+
+```bash
+flutter pub get
+flutter run --dart-define=API_BASE_URL=https://... # URL API esplicito, mai hardcodato
+```
+
+Altri comandi utili in [`CLAUDE.md`](CLAUDE.md#comandi-utili).
+
+## Licenza
+
+Distribuito sotto licenza [MIT](LICENSE).
