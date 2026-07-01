@@ -1,12 +1,14 @@
 # TODO_PLANCIA — Modifiche da portare nel backend Plancia
 
 Questo file traccia le incongruenze/bug scoperti lavorando sull'app Flutter
-**Diari di Bordo** che riguardano il backend Django (`../plancia/`) e che
-andrebbero eventualmente portati anche lì, per mantenere coerenza tra
-web app e app mobile.
+**Diari di Bordo** che riguardano il backend Django
+([`plancia`](https://github.com/AGESCI-Campania/plancia), checkout locale
+in `../plancia/`) e che andrebbero eventualmente portati anche lì, per
+mantenere coerenza tra web app e app mobile.
 
 Non è una todo-list dell'app Flutter (quella è in `TODO.md`): qui finiscono
-solo gli interventi che si applicano al repo `plancia`.
+solo gli interventi che si applicano al repo
+[`plancia`](https://github.com/AGESCI-Campania/plancia).
 
 ---
 

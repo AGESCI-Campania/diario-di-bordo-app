@@ -9,7 +9,8 @@
 
 App mobile Flutter per la gestione dei **Guidoncini Verdi** — AGESCI Campania, Branca E/G.
 Consente a Capi Squadriglia, Capi Reparto, Pattuglia GV, Incaricati EG e Segreteria di
-consultare e compilare i Diari di Bordo tramite le API REST della piattaforma **Plancia**.
+consultare e compilare i Diari di Bordo tramite le API REST della piattaforma
+[**Plancia**](https://github.com/AGESCI-Campania/plancia).
 
 > Guida per l'implementazione assistita: [`CLAUDE.md`](CLAUDE.md).
 > Avanzamento sviluppo: [`TODO.md`](TODO.md).
@@ -21,11 +22,9 @@ local_auth (FaceID/TouchID/Fingerprint) · reactive_forms · intl.
 
 ## Identificativi
 
-|            |                        |
-| ---------- | ---------------------- |
-| Bundle ID  | `org.antaresnet.appgv` |
-| API target | Plancia `/api/v1/`     |
-| Backend    | `plancia` (Django)     |
+- **Bundle ID**: `org.antaresnet.appgv`
+- **API target**: Plancia `/api/v1/`
+- **Backend**: [`plancia`](https://github.com/AGESCI-Campania/plancia) (Django)
 
 ## Avvio rapido
 
