@@ -85,12 +85,16 @@
 
 ---
 
-## Step 7 — Navigazione (`go_router`)
+## Step 7 — Navigazione (`go_router`) ✅
 
-- [ ] Route guard `authGuard`: nessun token → `/login`
-- [ ] Route guard `biometricGuard`: token presente ma gate non superato → `/gate`
-- [ ] Rotte: `/login`, `/mfa`, `/gate`, `/pin`, `/pin-setup`
-- [ ] Rotte protette: `/home`, `/diari`, `/diari/:id`, `/diari/:id/modulo/:n`, `/edizioni`, `/edizioni/:id`, `/org`, `/profilo`
+- [x] `lib/core/navigation/app_router.dart`: `routerProvider` con `GoRouter`, redirect sincrona che implementa `authGuard` (nessun token → `/login`) e `biometricGuard` (token presente ma PIN non configurato → `/pin-setup`; gate non superato → `/gate`); `_RouterRefreshNotifier` fa da ponte fra `authNotifierProvider`/`gateNotifierProvider`/`pinConfiguredProvider` (Riverpod) e `refreshListenable` (Listenable classico)
+- [x] Rotte: `/login`, `/mfa`, `/gate`, `/pin`, `/pin-setup` (più `/` come splash iniziale)
+- [x] Rotte protette: `/home`, `/diari`, `/diari/:id`, `/diari/:id/modulo/:n`, `/edizioni`, `/edizioni/:id`, `/org`, `/profilo` — quelle non ancora costruite (Step 8–10) usano `PlaceholderPage` come segnaposto
+- [x] `main.dart` semplificato: `BootstrapPage`/`_AuthGate` imperativi rimossi, resta solo il controllo `upgrade_required` (Step 6) nel `builder` di `MaterialApp.router`, a monte del router
+- [x] `LoginPage`/`MfaPage` non navigano più esplicitamente: la redirect osserva `AuthNotifier` e sposta la UI da sola (MFA richiesto, login riuscito, ecc.)
+- [x] `BiometricGatePage` naviga a `/pin` per il fallback (biometria assente/non disponibile/annullata o tasto "Usa il PIN") invece di incorporare `PinPage` con stato locale
+- [x] `FirstAccessPage` (ex `_FirstAccessFlow` in `main.dart`): PIN setup poi scelta biometria, isolato in `lib/features/auth/first_access_page.dart`
+- Nota: `flutter analyze` e `flutter test` verdi; verifica manuale su simulatore/emulatore non eseguita in questo step — toolchain locale non disponibile (iOS: runtime 26.5 mancante su Xcode; Android: system image AVD assente per entrambi gli emulatori configurati). Da rifare alla prima occasione utile o quando la toolchain sarà a posto.
 
 ---
 

@@ -5,9 +5,9 @@ import '../../core/api/api_exceptions.dart';
 import '../../core/auth/auth_state.dart';
 
 /// Secondo fattore TOTP (`/_allauth/app/v1/auth/2fa/authenticate`, vedi
-/// CLAUDE.md — Autenticazione, sezione MFA). Aperta da [LoginPage] quando
-/// `AuthResult.requiresMfa` è vero, usando il token provvisorio già salvato
-/// da `AuthService.login`.
+/// CLAUDE.md — Autenticazione, sezione MFA). Mostrata dalla redirect di
+/// `app_router.dart` quando `AuthResult.requiresMfa` è vero, usando il
+/// token provvisorio già salvato da `AuthService.login`.
 class MfaPage extends ConsumerStatefulWidget {
   const MfaPage({super.key});
 
@@ -38,9 +38,7 @@ class _MfaPageState extends ConsumerState<MfaPage> {
           .read(authNotifierProvider.notifier)
           .authenticateMfa(_codeController.text.trim());
       if (!mounted) return;
-      if (result.isAuthenticated) {
-        Navigator.of(context).pop();
-      } else {
+      if (!result.isAuthenticated) {
         setState(() {
           _errorText = result.errors.isNotEmpty
               ? result.errors.join('\n')

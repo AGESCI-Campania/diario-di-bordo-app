@@ -7,8 +7,8 @@ import '../../core/providers.dart';
 
 /// Setup del PIN a 6 cifre al primo accesso (vedi CLAUDE.md — Step 6):
 /// richiede il PIN due volte e lo salva solo se coincidono. Chiama
-/// [onDone] al termine — il chiamante (`_FirstAccessFlow` in `main.dart`)
-/// decide il passo successivo (`BiometricSetupPage`).
+/// [onDone] al termine — il chiamante (`FirstAccessPage`) decide il passo
+/// successivo (`BiometricSetupPage`).
 class PinSetupPage extends ConsumerStatefulWidget {
   const PinSetupPage({super.key, required this.onDone});
 

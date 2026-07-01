@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/auth/gate_state.dart';
 import '../../core/providers.dart';
-import 'pin_page.dart';
 
 /// Gate biometrico con fallback a PIN (vedi CLAUDE.md — Step 6). Mostrato
-/// da `_PostAuthGate` (in `main.dart`) ogni volta che `gateNotifierProvider`
-/// è `locked`: all'avvio dell'app e dopo 5 minuti in background.
+/// dalla redirect di `app_router.dart` ogni volta che `gateNotifierProvider`
+/// è `locked`: all'avvio dell'app e dopo 5 minuti in background. Il
+/// fallback (biometria assente/non disponibile/annullata) naviga a `/pin`.
 class BiometricGatePage extends ConsumerStatefulWidget {
   const BiometricGatePage({super.key});
 
@@ -17,7 +18,6 @@ class BiometricGatePage extends ConsumerStatefulWidget {
 
 class _BiometricGatePageState extends ConsumerState<BiometricGatePage> {
   bool _checking = true;
-  bool _showPinFallback = false;
   bool _authenticating = false;
 
   @override
@@ -32,10 +32,7 @@ class _BiometricGatePageState extends ConsumerState<BiometricGatePage> {
         .readBiometricEnabled();
     if (!mounted) return;
     if (!biometricEnabled) {
-      setState(() {
-        _checking = false;
-        _showPinFallback = true;
-      });
+      context.go('/pin');
       return;
     }
     setState(() => _checking = false);
@@ -43,18 +40,12 @@ class _BiometricGatePageState extends ConsumerState<BiometricGatePage> {
   }
 
   Future<void> _tryBiometric() async {
-    setState(() {
-      _authenticating = true;
-      _showPinFallback = false;
-    });
+    setState(() => _authenticating = true);
     final biometric = ref.read(biometricServiceProvider);
     final available = await biometric.isAvailable();
     if (!available) {
       if (!mounted) return;
-      setState(() {
-        _authenticating = false;
-        _showPinFallback = true;
-      });
+      context.go('/pin');
       return;
     }
     final ok = await biometric.authenticate();
@@ -63,19 +54,13 @@ class _BiometricGatePageState extends ConsumerState<BiometricGatePage> {
       ref.read(gateNotifierProvider.notifier).unlock();
       return;
     }
-    setState(() {
-      _authenticating = false;
-      _showPinFallback = true;
-    });
+    setState(() => _authenticating = false);
   }
 
   @override
   Widget build(BuildContext context) {
     if (_checking) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-    if (_showPinFallback) {
-      return PinPage(onCancel: () => setState(() => _showPinFallback = false));
     }
     return Scaffold(
       body: Center(
@@ -97,7 +82,7 @@ class _BiometricGatePageState extends ConsumerState<BiometricGatePage> {
                 ),
               const SizedBox(height: 8),
               TextButton(
-                onPressed: () => setState(() => _showPinFallback = true),
+                onPressed: () => context.go('/pin'),
                 child: const Text('Usa il PIN'),
               ),
             ],

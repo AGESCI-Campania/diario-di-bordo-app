@@ -7,16 +7,11 @@ import '../../core/auth/pin_service.dart';
 import '../../core/providers.dart';
 
 /// Fallback del gate biometrico (vedi CLAUDE.md — Step 6): verifica il PIN
-/// contro l'hash salvato e, se corretto, sblocca il gate direttamente —
-/// `_PostAuthGate` in `main.dart` osserva `gateNotifierProvider` e mostra
-/// la home reattivamente, senza bisogno di navigazione esplicita qui.
+/// contro l'hash salvato e, se corretto, sblocca il gate direttamente — la
+/// redirect di `app_router.dart` osserva `gateNotifierProvider` e mostra la
+/// home reattivamente, senza bisogno di navigazione esplicita qui.
 class PinPage extends ConsumerStatefulWidget {
-  const PinPage({super.key, this.onCancel});
-
-  /// Se non nullo, mostra un'azione per tornare alla schermata biometrica
-  /// (usato quando questa pagina è incorporata come fallback in
-  /// `BiometricGatePage`).
-  final VoidCallback? onCancel;
+  const PinPage({super.key});
 
   @override
   ConsumerState<PinPage> createState() => _PinPageState();
@@ -53,14 +48,6 @@ class _PinPageState extends ConsumerState<PinPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.onCancel != null
-          ? AppBar(
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: widget.onCancel,
-              ),
-            )
-          : null,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),

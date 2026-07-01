@@ -3,19 +3,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/api/api_exceptions.dart';
 import '../../core/auth/auth_state.dart';
-import '../../core/models/app_status.dart';
+import '../../core/providers.dart';
 import '../../shared/widgets/upgrade_banner.dart';
-import 'mfa_page.dart';
 
 /// Login app-mode (`/_allauth/app/v1/auth/login`, vedi CLAUDE.md —
-/// Autenticazione). Se il risultato richiede MFA apre [MfaPage]; se il
-/// login riesce del tutto, non fa nulla di esplicito: `AuthNotifier`
-/// aggiorna lo stato globale e il widget radice (`_AuthGate` in
-/// `main.dart`) smonta questa pagina reattivamente.
+/// Autenticazione). Non naviga esplicitamente: `AuthNotifier` aggiorna lo
+/// stato globale e la redirect di `app_router.dart` porta a `/mfa` o alla
+/// destinazione post-login appropriata reattivamente.
 class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key, this.appStatus});
-
-  final AppStatus? appStatus;
+  const LoginPage({super.key});
 
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();
@@ -50,11 +46,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             password: _passwordController.text,
           );
       if (!mounted) return;
-      if (result.requiresMfa) {
-        await Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (_) => const MfaPage()));
-      } else if (!result.isAuthenticated) {
+      if (!result.isAuthenticated && !result.requiresMfa) {
         setState(() {
           _errorText = result.errors.isNotEmpty
               ? result.errors.join('\n')
@@ -71,7 +63,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final status = widget.appStatus;
+    final status = ref.watch(appStatusProvider).value;
     return Scaffold(
       body: SafeArea(
         child: Column(
